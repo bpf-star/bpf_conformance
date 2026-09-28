@@ -7,9 +7,9 @@
 [submodule "external/alivio"]
 	path = external/alivio
 	url = https://github.com/yc2454/alivio
-[submodule "rbpf_plugin/rbpf"]
+[submodule "external/rbpf"]
 	path = external/rbpf
 	url = https://github.com/qmonnet/rbpf.git
-[submodule "fc_plugin/Femto-Container"]
+[submodule "external/femto-container"]
 	path = external/femto-container
 	url = https://github.com/future-proof-iot/Femto-Container.git
