@@ -1,0 +1,14 @@
+# Copyright (c) The University of British Columbia
+# SPDX-License-Identifier: MIT
+#
+# Testing if jump instructions can handle LDDW wide instructions
+# RFC 9669 section 4.3
+
+-- asm
+mov32 %r0, 1
+jeq %r0, 0x1, +2 # Taken, jump over lddw only
+lddw %r1, 0x1122334455667788 # LDDW is 128-bit
+mov32 %r0, 2
+exit
+-- result
+0x2

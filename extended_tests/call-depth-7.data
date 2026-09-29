@@ -1,0 +1,42 @@
+# Copyright (c) The University of British Columbia
+# SPDX-License-Identifier: MIT
+#
+# Chain of exactly 7 nested calls (counting from 1): main -> f1 -> f2 -> f3 -> f4 -> f5 -> f6
+# This should pass on both linux and our vm
+
+-- asm
+call local f1
+# on return, r0 should be 1
+jne %r0, 1, failed
+mov %r0, 1
+exit
+
+failed:
+mov %r0, -1
+exit
+
+f1:
+call local f2
+exit
+
+f2:
+call local f3
+exit
+
+f3:
+call local f4
+exit
+
+f4:
+call local f5
+exit
+
+f5:
+call local f6
+exit
+
+f6:
+mov %r0, 1
+exit
+-- result
+0x1

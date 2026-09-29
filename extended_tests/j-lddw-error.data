@@ -1,0 +1,14 @@
+# Copyright (c) The University of British Columbia
+# SPDX-License-Identifier: MIT
+#
+# Testing if jump instructions can handle LDDW wide instructions
+# RFC 9669 section 4.3
+
+-- asm
+mov32 %r0, 1
+jeq %r0, 0x1, +1 # Taken, jump over the first 64 bits of lddw only
+lddw %r1, 0x1122334455667788 # LDDW is 128-bit
+mov32 %r0, 2
+exit
+-- error
+Invalid access to the middle of a 64-bit immediate instruction (IMM_NEXT)

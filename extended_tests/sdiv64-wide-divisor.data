@@ -1,0 +1,13 @@
+# Copyright (c) The University of British Columbia
+# SPDX-License-Identifier: MIT
+#
+# 64-bit sdiv with a register divisor wider than 32 bits: 12 s/ 0x100000004 = 0.
+# Truncating the divisor to its low 32 bits would give 12 s/ 4 = 3.
+
+-- asm
+mov %r0, 12
+lddw %r1, 0x100000004
+sdiv %r0, %r1
+exit
+-- result
+0x0

@@ -1,0 +1,13 @@
+# Copyright (c) The University of British Columbia
+# SPDX-License-Identifier: MIT
+-- asm
+mov32 %r0, 10
+mov32 %r1, 12
+xor32 %r0, %r1
+mov32 %r2, 3
+xor32 %r0, %r2
+xor32 %r0, 15
+xor32 %r0, 8
+exit
+-- result
+0x2

@@ -1,0 +1,15 @@
+# Copyright (c) The University of British Columbia
+# SPDX-License-Identifier: MIT
+#
+# INT32_MIN s% -1 = 0 (32-bit), with both operands loaded from memory so a JIT
+# cannot constant-fold the operation (x86 idiv traps on this input).
+
+-- asm
+ldxw %r0, [%r1]
+ldxw %r2, [%r1+4]
+smod32 %r0, %r2
+exit
+-- mem
+00 00 00 80 ff ff ff ff
+-- result
+0x0

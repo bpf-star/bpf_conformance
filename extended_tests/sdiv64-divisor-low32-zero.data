@@ -1,0 +1,13 @@
+# Copyright (c) The University of British Columbia
+# SPDX-License-Identifier: MIT
+#
+# 64-bit sdiv by 0x100000000: the divisor is non-zero but its low 32 bits are zero.
+# 12 s/ 0x100000000 = 0; truncating the divisor would divide by zero.
+
+-- asm
+mov %r0, 12
+lddw %r1, 0x100000000
+sdiv %r0, %r1
+exit
+-- result
+0x0

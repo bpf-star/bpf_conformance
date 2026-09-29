@@ -1,0 +1,8 @@
+# Copyright (c) The University of British Columbia
+# SPDX-License-Identifier: MIT
+-- asm
+mov %r0, 0x42
+ja32 +50
+exit
+-- error
+OOB access to 51

@@ -1,0 +1,13 @@
+# Copyright (c) The University of British Columbia
+# SPDX-License-Identifier: MIT
+#
+# 64-bit smod with a register divisor wider than 32 bits: 12 s% 0x100000005 = 12.
+# Truncating the divisor to its low 32 bits would give 12 s% 5 = 2.
+
+-- asm
+mov %r0, 12
+lddw %r1, 0x100000005
+smod %r0, %r1
+exit
+-- result
+0xc

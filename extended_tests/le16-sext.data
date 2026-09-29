@@ -1,0 +1,8 @@
+# Copyright (c) The University of British Columbia
+# SPDX-License-Identifier: MIT
+-- asm
+mov %r0, 0x87654321
+le16 %r0
+exit
+-- result
+0x4321
