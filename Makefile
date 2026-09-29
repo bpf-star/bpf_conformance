@@ -32,10 +32,13 @@ endif
 
 ifneq ($(strip $(TEST)),)
 TEST_INPUT := --test_file_path "$(abspath $(TEST))"
-ISA_TEST_INPUT := $(TEST_INPUT)
+ISA_TEST_INPUTS := --test_file_path=$(abspath $(TEST))
 else
 TEST_INPUT := --test_file_directory "$(CURDIR)/verifier_tests"
-ISA_TEST_INPUT := --test_file_directory "$(CURDIR)/tests"
+# The upstream suite, then our extensions (reported separately).
+ISA_TEST_INPUTS := \
+	--test_file_directory=$(CURDIR)/tests \
+	--test_file_directory=$(CURDIR)/extended_tests
 endif
 
 VERIFIER_OPTIONS := \
@@ -44,10 +47,20 @@ VERIFIER_OPTIONS := \
 	--verifier true \
 	--xdp_prolog true
 
-# Runtime (ISA) conformance: run the programs in tests/ and check r0.
-ISA_OPTIONS := \
-	$(ISA_TEST_INPUT) \
-	--cpu_version v4
+# Runtime (ISA) conformance: run the test programs and check r0.
+ISA_OPTIONS := --cpu_version v4
+
+# Run the runner once per ISA test input, passing the plugin arguments in $(1).
+# The runner exits non-zero if any test fails, so keep going to report every
+# input, then fail if any run failed.
+define run_isa
+	@status=0; \
+	for input in $(ISA_TEST_INPUTS); do \
+		echo "==> $$input"; \
+		"$(RUNNER)" "$$input" $(ISA_OPTIONS) $(1) || status=1; \
+	done; \
+	exit $$status
+endef
 
 .DEFAULT_GOAL := all
 
@@ -113,12 +126,7 @@ fc-plugin:
 	$(MAKE) -C fc_plugin
 
 rbpf: all rbpf-plugin
-	"$(RUNNER)" \
-		$(ISA_OPTIONS) \
-		--plugin_path "$(RBPF_PLUGIN)" \
-		--plugin_options="$(RBPF_PLUGIN_OPTIONS)"
+	$(call run_isa,--plugin_path "$(RBPF_PLUGIN)" --plugin_options="$(RBPF_PLUGIN_OPTIONS)")
 
 fc: all fc-plugin
-	"$(RUNNER)" \
-		$(ISA_OPTIONS) \
-		--plugin_path "$(FC_PLUGIN)"
+	$(call run_isa,--plugin_path "$(FC_PLUGIN)")
