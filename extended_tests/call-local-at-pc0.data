@@ -1,0 +1,14 @@
+# Copyright (c) The University of British Columbia
+# SPDX-License-Identifier: MIT
+#
+# Program-local call as the very first instruction (pc 0).
+# Upstream call tests always place setup code before the call.
+
+-- asm
+call local f1
+exit
+f1:
+mov %r0, 1
+exit
+-- result
+0x1

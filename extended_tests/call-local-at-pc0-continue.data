@@ -1,0 +1,15 @@
+# Copyright (c) The University of British Columbia
+# SPDX-License-Identifier: MIT
+#
+# Program-local call at pc 0; after the callee returns, execution must
+# continue at pc 1 (the add), giving 1 + 1 = 2.
+
+-- asm
+call local f1
+add %r0, 1
+exit
+f1:
+mov %r0, 1
+exit
+-- result
+0x2
